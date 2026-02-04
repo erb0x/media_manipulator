@@ -76,7 +76,7 @@ export async function updateSettings(data: SettingsUpdateRequest): Promise<Setti
 // ==================== Scans ====================
 
 export interface ScanStartRequest {
-    root_path: string;
+    root_paths: string[];
     name?: string;
     exclusion_patterns?: string[];
 }
@@ -147,6 +147,7 @@ export interface MediaFile {
     extracted_series: string | null;
     extracted_series_index: number | null;
     extracted_year: number | null;
+    extracted_parent_series: string | null;
 
     // Final metadata (after user edits)
     final_title: string | null;
@@ -155,6 +156,7 @@ export interface MediaFile {
     final_series: string | null;
     final_series_index: number | null;
     final_year: number | null;
+    final_parent_series: string | null;
 
     duration_seconds: number | null;
     file_size: number;
@@ -183,6 +185,7 @@ export interface AudiobookGroup {
     final_series: string | null;
     final_series_index: number | null;
     final_year: number | null;
+    final_parent_series: string | null;
 
     confidence: number | null;
     files?: MediaFile[];
@@ -278,6 +281,26 @@ export async function getStats(): Promise<StatsResponse> {
     return fetchAPI<StatsResponse>('/files/stats');
 }
 
+export async function enrichFile(fileId: string, force = false): Promise<MediaFile> {
+    return fetchAPI<MediaFile>(`/files/${fileId}/enrich?force=${force}`, { method: 'POST' });
+}
+
+export async function enrichGroup(groupId: string, force = false): Promise<AudiobookGroup> {
+    return fetchAPI<AudiobookGroup>(`/files/groups/${groupId}/enrich?force=${force}`, { method: 'POST' });
+}
+
+export interface BulkEnrichResponse {
+    files: { id: string; success: boolean; error?: string }[];
+    groups: { id: string; success: boolean; error?: string }[];
+}
+
+export async function bulkEnrich(fileIds: string[], groupIds: string[]): Promise<BulkEnrichResponse> {
+    return fetchAPI<BulkEnrichResponse>('/files/bulk-enrich', {
+        method: 'POST',
+        body: JSON.stringify({ file_ids: fileIds, group_ids: groupIds }),
+    });
+}
+
 export async function bulkApprove(fileIds: string[], groupIds: string[]): Promise<{ approved_files: number; approved_groups: number }> {
     return fetchAPI('/files/bulk-approve', {
         method: 'POST',
@@ -370,6 +393,7 @@ export interface ProviderSearchResult {
     series: string | null;
     series_index: number | null;
     year: number | null;
+    parent_series?: string | null;
     description: string | null;
     cover_url: string | null;
     confidence: number;

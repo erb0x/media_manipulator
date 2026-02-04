@@ -14,10 +14,12 @@ function App() {
         <aside className="sidebar">
           <div className="sidebar-header">
             <div className="sidebar-logo">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2L2 7v10l10 5 10-5V7l-10-5zm0 2.18l6.9 3.45L12 11.08 5.1 7.63 12 4.18zM4 8.88l7 3.5v7.24l-7-3.5V8.88zm9 10.74V12.38l7-3.5v7.24l-7 3.5z" />
+              <svg className="logo-wand" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M15 4V2" /><path d="M15 16v-2" /><path d="M8 9h2" /><path d="M20 9h2" />
+                <path d="M17.8 11.8L19 13" /><path d="M15 9h0" /><path d="M17.8 6.2L19 5" />
+                <path d="m3 21 9-9" /><path d="M12 16l-6 6" /><path d="m6 16 6 6" />
               </svg>
-              Media Organizer
+              Media Magic
             </div>
           </div>
 
